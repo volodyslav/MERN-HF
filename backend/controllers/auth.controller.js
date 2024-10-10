@@ -38,7 +38,7 @@ export const signup = async (req, res) => {
 
         // Create token
         const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET, {expiresIn: "3d"})
-        res.cookie("jwt-content", token, {
+        await res.cookie("jwt-content", token, {
             httpOnly: true,  
             maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
             secure: process.env.NODE_ENV === "production",
@@ -66,10 +66,47 @@ export const signup = async (req, res) => {
 
 }
 
-export const login = (req, res) => {
-    res.send("login");
+export const login = async (req, res) => {
+    try {
+        const {username, password} = req.body;
+
+        // Check all the fields
+        if (!username ||!password) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        // Check if user exists
+        const user = await User.findOne({ username: username });
+        if (!user) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        // Check if password matches
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        // Create token
+        const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET, {expiresIn: "3d"})
+        await res.cookie("jwt-content", token, {
+            httpOnly: true,  
+            maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict"  
+        })
+        res.json({
+            message: "User logged in successfully"
+        })
+
+
+    } catch (error) {
+        console.error("Error in login: ", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 }
 
 export const logout = (req, res) => {
-    res.send("logout");
+    res.clearCookie("jwt-content");
+    res.json({message: "Logged out successfully"});
 }
