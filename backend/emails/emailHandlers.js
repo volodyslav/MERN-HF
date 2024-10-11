@@ -14,6 +14,7 @@ export const sendWelcomeEmail = async (email, username, profileUrl) => {
         });
         console.log("Email sent successfully:", response);
     } catch (error) {
-        throw error;
+        console.log("Error sending email: ", error);
+        process.exit(1); 
     }
 }

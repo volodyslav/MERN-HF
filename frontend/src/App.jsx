@@ -4,6 +4,7 @@ import Login from "./pages/auth/Login"
 import SignUp from "./pages/auth/SignUp"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
+import {Toaster} from "react-hot-toast"
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Toaster />
     </Layout>
   )
 }

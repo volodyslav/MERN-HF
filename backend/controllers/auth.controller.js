@@ -28,6 +28,11 @@ export const signup = async (req, res) => {
             return res.status(400).json({ error: "Password must be at least 8 characters long" });
         }
 
+        // Check if username length is
+        if (username.length < 3) {
+            return res.status(400).json({ error: "Username must be at least 3 characters long" });
+        }
+
         // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
