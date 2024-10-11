@@ -2,7 +2,9 @@
 
 const NotFound = () => {
   return (
-    <div>NotFound</div>
+    <div className=" flex justify-center mx-auto items-center h-screen">
+      <p className=" text-4xl text-white">Page is Not Found</p>
+    </div>
   )
 }
 
