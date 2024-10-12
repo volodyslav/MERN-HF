@@ -2,6 +2,7 @@ import { axiosIstance } from "../../lib/axios"
 import toast from "react-hot-toast"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
+import { Link } from "react-router-dom"
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -34,6 +35,7 @@ const Login = () => {
           <input maxLength={100} type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="input input-bordered w-full " />
           <button type="submit" disabled={isLoading} className=" bg-blue-800 p-2 text-xl hover:bg-blue-700 text-white rounded-lg ">{isLoading ? <span className="loading loading-spinner loading-lg"></span> : "Submit"}</button>
         </form>
+        <Link to="/signup" className="text-center text-xl">{"Don't "}have an account ? <span className="text-blue-500 hover:text-blue-700">Sign up</span></Link>
       </div>
     </div>
   )

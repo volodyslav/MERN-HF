@@ -22,7 +22,7 @@ app.use(cookieParser());
 // Routes for users
 app.use("/api/v1/auth", authRoutes);
 // Routes for ai models
-app.use("/api/models", aiModels);
+app.use("/api/v1/models", aiModels);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

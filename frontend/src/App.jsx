@@ -8,6 +8,7 @@ import {Toaster} from "react-hot-toast"
 import { useQuery } from "@tanstack/react-query";
 import { axiosIstance } from "./lib/axios"
 import toast from "react-hot-toast"
+import TextGeneration from "./pages/aimodels/TextGeneration"
 
 
 const App = () => {
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/" element={authUser ? <Home /> : <Navigate to={"/login"}/>} />
         <Route path="/signup" element={!authUser ? <SignUp /> : <Navigate to={"/"}/> } />
         <Route path="/login" element={!authUser ? <Login /> : <Navigate to={"/"}/>} />
+        <Route path="/text-generation" element={authUser ? <TextGeneration/> : <Navigate to={"/login"}/>}></Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />

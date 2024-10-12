@@ -11,7 +11,7 @@ export const textGeneration = async(req, res) =>{
     try {
         const { text } = req.body; // Get 'message' from request body
         if (!text) {
-            return res.status(400).json({ error: "Message is required." });
+            return res.status(400).json({ error: "Text is required." });
         }
 
         let responseText = ""; // Accumulate response chunks
