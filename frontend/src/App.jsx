@@ -19,10 +19,11 @@ const App = () => {
         const response = await axiosIstance.get("/auth/")
         return response.data
       } catch (error) {
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status == 401) {
 					return null;
 				}
         toast.error(error.response.data.error)
+        return null;
       }
     },
   })
