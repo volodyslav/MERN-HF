@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, useMutation} from "@tanstack/react-query"
-import { Navigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { axiosIstance } from "../../lib/axios";
 import toast from "react-hot-toast";
 import { IoMdLogOut } from "react-icons/io";

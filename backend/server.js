@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.route.js";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors"
+import aiModels from "./routes/aimodel.route.js"
 
 dotenv.config();
 
@@ -19,8 +20,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes for users
-app.use("/api/v1/auth", authRoutes)
-
+app.use("/api/v1/auth", authRoutes);
+// Routes for ai models
+app.use("/api/models", aiModels);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
