@@ -1,44 +1,61 @@
 import { axiosIstance } from "../../lib/axios";
-import { useMutation} from "@tanstack/react-query"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import toast from "react-hot-toast";
 import { CiSearch } from "react-icons/ci";
+
 
 const TextGeneration = () => {
     const [text, setText] = useState("");
     const [generatedText, setGeneratedText] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [displayedText, setDisplayedText] = useState("");
 
-    const {mutate: generateTextMutation, isLoading} = useMutation({
-        mutationFn: async (data) => {
-            const response = await axiosIstance.post("/models/text-generation", data);
-            return response.data;
-        },
-        onSuccess: (data) => {
-            setGeneratedText(data.message);
-            setText("");
-        },
-        onError: (error) => {
-            toast.error(error.response.data.error || "Something went wrong");
+    useEffect(() => {
+        if (!generatedText) return; 
+        let index = 0;
+        const intervalId = setInterval(() => {
+          setDisplayedText((prev) => prev + generatedText[index]);
+          index++;
+          if (index === generatedText.length) clearInterval(intervalId);
+        }, 10);
+    
+        return () => clearInterval(intervalId); // Cleanup on unmount
+    }, [generatedText]);
+
+    const generateTextMutation = async() => {
+        setIsLoading(true);
+        try {
+            const response = await axiosIstance.post("/models/text-generation", {text});
+            console.log(response)
+            setGeneratedText(response.data.message);
+        } catch (error) {
+            toast.error(error.error || "Something went wrong");
+        }finally{
+            setIsLoading(false);
         }
-    });
-
+    } 
+      
+    // Implement form validation logic here.
     const handleGenerateText = (e) => {
         e.preventDefault();
-        generateTextMutation({text});
+        setGeneratedText("");
+        setDisplayedText("");
+        // Implement form validation logic here.
+        generateTextMutation();
     }
 
   return (
-    <div className=" min-h-screen flex justify-center items-center flex-col">
-        <div className=" my-4 border-4 border-slate-800 rounded-xl bg-gray-600 w-full sm:w-1/2 m-10 p-4">
+    <div className="  sm:mx-20 mx-2 o flex justify-center items-center flex-col my-2 sm:p-10">
+        <div className=" h-[500px] overflow-auto my-10 border-4 border-slate-800 rounded-xl bg-gray-600 w-full  p-6">
             <div className="chat chat-start">
-                <div className="chat-bubble">{text}</div>
+                {generatedText && <div className="chat-bubble text-xl">{displayedText}</div>}
             </div>
             <div className="chat chat-end">
-                <div className="chat-bubble">{generatedText}</div>
+                {text && <div className="chat-bubble text-xl">{text}</div>}
             </div>
         </div>
         
-        <form onSubmit={handleGenerateText} className=" w-full sm:w-1/2 mx-auto flex space-x-4 items-center">
+        <form onSubmit={handleGenerateText} className=" w-full  mx-auto flex space-x-4 items-center">
             <input maxLength={200} type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter some text..." className="input input-bordered w-full min-h-14" />
             <button type="submit" disabled={isLoading} className="bg-blue-800 p-2 text-xl hover:bg-blue-700 text-white rounded-lg ">{isLoading ? <span className="loading loading-spinner loading-lg"></span> : <CiSearch className=" w-10 h-10"/>}</button>
             
