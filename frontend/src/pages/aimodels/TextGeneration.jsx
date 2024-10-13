@@ -16,7 +16,7 @@ const TextGeneration = () => {
         const intervalId = setInterval(() => {
           setDisplayedText((prev) => prev + generatedText[index]);
           index++;
-          if (index === generatedText.length) clearInterval(intervalId);
+          if (index === generatedText.length - 1) clearInterval(intervalId);
         }, 10);
     
         return () => clearInterval(intervalId); // Cleanup on unmount

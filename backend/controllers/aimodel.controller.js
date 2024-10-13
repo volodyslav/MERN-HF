@@ -34,3 +34,33 @@ export const textGeneration = async(req, res) =>{
 };
 
 
+export const imageGeneration = async(req, res) => {
+    try {
+        const { prompt } = req.body; // Get 'prompt' from request body
+        if (!prompt) {
+            return res.status(400).json({ error: "Prompt is required." });
+        }
+        const data = { "inputs": prompt };
+        const response = await fetch("https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev",
+                {
+                    headers: {
+                        Authorization: `Bearer ${process.env.HF_TOKEN}`,
+                        "Content-Type": "application/json",
+                    },
+                    method: "POST",
+                    body: JSON.stringify(data),
+                }
+            );
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const blob = await response.blob();
+        const buffer = await blob.arrayBuffer();
+        res.set('Content-Type', 'image/png'); // Adjust MIME type if necessary
+        res.send(Buffer.from(buffer));
+    }
+    catch(error){
+        console.error("Image generator error: ", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
