@@ -10,9 +10,12 @@ import { axiosIstance } from "./lib/axios"
 import toast from "react-hot-toast"
 import TextGeneration from "./pages/aimodels/TextGeneration"
 import ImageGeneration from "./pages/aimodels/ImageGeneration"
-
+import { useEmailContext } from "./context/EmailContext"
+import EmailPage from "./pages/auth/EmailPage"
 
 const App = () => {
+  const {emailSent} = useEmailContext()
+  console.log(emailSent)
   
   const {data: authUser, isLoading} = useQuery({
     queryKey: ["authUser"],
@@ -36,7 +39,8 @@ const App = () => {
     <Layout>
       <Routes>
         <Route path="/" element={authUser ? <Home /> : <Navigate to={"/login"}/>} />
-        <Route path="/signup" element={!authUser ? <SignUp /> : <Navigate to={"/"}/> } />
+        <Route path="/signup" element={!authUser && emailSent ? <SignUp /> : <Navigate to={"/"}/> } />
+        <Route path="/send-email" element={!authUser && !emailSent ? <EmailPage /> : <Navigate to={"/signup"}/> } />
         <Route path="/login" element={!authUser ? <Login /> : <Navigate to={"/"}/>} />
         <Route path="/text-generation" element={authUser ? <TextGeneration/> : <Navigate to={"/login"}/>}></Route>
         <Route path="/image-generation" element={authUser ? <ImageGeneration/> : <Navigate to={"/login"}/>}></Route>

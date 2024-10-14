@@ -3,11 +3,14 @@ import { Link } from "react-router-dom"
 import toast from "react-hot-toast";
 import { axiosIstance } from "../../lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEmailContext } from "../../context/EmailContext";
 
 const SignUp = () => {
   // Implement form submission logic to sign up the user.
+  const { email} = useEmailContext(); // Assuming EmailContext is used for sending email.
+
+  // Use state to hold form inputs.
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -49,15 +52,7 @@ const SignUp = () => {
       return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast.error("Invalid email format");
-      return;
-    }
     signUpMutation({username, email, password})
-    setUsername("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
   }
 
   return (
@@ -66,7 +61,7 @@ const SignUp = () => {
         <h1 className=" text-3xl text-center my-6">Sign Up</h1>
         <form onSubmit={handleSubmit} className=" flex flex-col gap-4">
           <input maxLength={50} type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" className="input input-bordered w-full " />
-          <input maxLength={50} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="input input-bordered w-full " />
+          <input maxLength={50}  type="email" value={email} readOnly placeholder="Email" className="input input-bordered w-full " />
           <input maxLength={100} type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="input input-bordered w-full " />
           <input maxLength={100} type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" className="input input-bordered w-full " />
           <button type="submit" disabled={isLoading} className=" bg-blue-800 p-2 text-xl hover:bg-blue-700 text-white rounded-lg ">{isLoading ? <span className="loading loading-spinner loading-lg"></span> : "Submit"}</button>

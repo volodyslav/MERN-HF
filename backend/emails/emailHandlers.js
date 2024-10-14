@@ -1,7 +1,7 @@
 import { mailtrapClient, sender } from "../lib/mailtrap.js";
 import { createWelcomeEmailTemplate } from "./emailTemplates.js";
 
-export const sendWelcomeEmail = async (email, username, profileUrl) => {
+export const sendWelcomeEmail = async (email, profileUrl) => {
     const recipient = [{ email }];
 
     try {
@@ -9,7 +9,7 @@ export const sendWelcomeEmail = async (email, username, profileUrl) => {
             from: sender,
             to: recipient,
             subject: "Welcome to Content Generator App!",
-            html: createWelcomeEmailTemplate(username, profileUrl),
+            html: createWelcomeEmailTemplate(email, profileUrl),
             category: "welcome",
         });
         console.log("Email sent successfully:", response);

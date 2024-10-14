@@ -3,20 +3,35 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs";
 import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 
-export const signup = async (req, res) => {
-    try {
-        const {username, password, email} = req.body;
-        
-        // Check all the fields
-        if (!username ||!password ||!email) {
-            return res.status(400).json({ error: "All fields are required" });
-        }
 
+export const setUpEmail = async(req, res) => {
+    try {
+        const { email } = req.body;
         // Check if email already exists
         const emailExists = await User.findOne({ email: email});
         if (emailExists) {
             return res.status(400).json({ error: "Email already exists" });
         }
+
+        const profileUrl = process.env.CLIENT_URL + "/signup";
+        await sendWelcomeEmail(email, profileUrl);
+        res.status(200).json({ message: "Email was sent successfully"});
+    } catch (error) {
+        console.error("Error sending an email", error)
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+export const signup = async (req, res) => {
+    try {
+        const {username, password, email} = req.body;
+        
+        // Check all the fields
+        if (!username ||!password) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        
         // Check if username already exists
         const usernameExists = await User.findOne({ username: username});
         if (usernameExists) {
@@ -54,15 +69,7 @@ export const signup = async (req, res) => {
             message: "User registered successfully"
         })
 
-        // Send welcome email to the user
-        const profileUrl = process.env.CLIENT_URL + "/profile/" + user.username;
-
-        try {
-            await sendWelcomeEmail(user.email, user.username, profileUrl);
-        } catch (error) {
-            console.error("Error sending an email", error)
-            res.status(500).json({ error: "Internal Server Error" });
-        }
+        
 
     } catch (error) {
         console.error("Error in signup: ", error.message);
