@@ -12,6 +12,8 @@ import TextGeneration from "./pages/aimodels/TextGeneration"
 import ImageGeneration from "./pages/aimodels/ImageGeneration"
 import { useEmailContext } from "./context/EmailContext"
 import EmailPage from "./pages/auth/EmailPage"
+import AudioGeneration from "./pages/aimodels/AudioGeneration"
+import TextAudioGeneration from "./pages/aimodels/TextAudioGeneration"
 
 const App = () => {
   const {emailSent} = useEmailContext()
@@ -41,9 +43,11 @@ const App = () => {
         <Route path="/" element={authUser ? <Home /> : <Navigate to={"/login"}/>} />
         <Route path="/signup" element={!authUser && emailSent ? <SignUp /> : <Navigate to={"/"}/> } />
         <Route path="/send-email" element={!authUser && !emailSent ? <EmailPage /> : <Navigate to={"/signup"}/> } />
-        <Route path="/login" element={!authUser ? <Login /> : <Navigate to={"/"}/>} />
+        <Route path="/login" element={!authUser && !emailSent? <Login /> : <Navigate to={"/"}/>} />
         <Route path="/text-generation" element={authUser ? <TextGeneration/> : <Navigate to={"/login"}/>}></Route>
         <Route path="/image-generation" element={authUser ? <ImageGeneration/> : <Navigate to={"/login"}/>}></Route>
+        <Route path="/audio-generation" element={authUser ? <AudioGeneration/> : <Navigate to={"/login"}/>}></Route>
+        <Route path="/text-audio-generation" element={authUser ? <TextAudioGeneration/> : <Navigate to={"/login"}/>}></Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />

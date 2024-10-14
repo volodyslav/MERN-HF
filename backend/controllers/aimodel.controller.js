@@ -64,3 +64,60 @@ export const imageGeneration = async(req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+export const audioGeneration = async (req, res) => {
+    try{
+        const { prompt } = req.body;
+        if (!prompt) {
+            return res.status(400).json({ error: "Prompt is required." });
+        }
+        const data = { "inputs": prompt };
+        const response = await fetch(
+            "https://api-inference.huggingface.co/models/facebook/musicgen-small",
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.HF_TOKEN}`,
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify(data),
+            }
+        );
+            const result = await response.blob();
+            const buffer = await result.arrayBuffer();
+            res.set('Content-Type', 'audio/mpeg'); // Use the correct MIME type for audio
+            res.send(Buffer.from(buffer));
+        }catch(error){
+            console.error("Audio generator error: ", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
+export const textToAudioGeneration = async (req, res) => {
+        try{
+            const { prompt } = req.body;
+            if (!prompt) {
+                return res.status(400).json({ error: "Prompt is required." });
+            }
+            const data = { "inputs": prompt };
+            const response = await fetch(
+                "https://api-inference.huggingface.co/models/facebook/mms-tts-eng",
+                {
+                    headers: {
+                        Authorization: `Bearer ${process.env.HF_TOKEN}`,
+                        "Content-Type": "application/json",
+                    },
+                    method: "POST",
+                    body: JSON.stringify(data),
+                }
+            );
+            const result = await response.blob();
+            const buffer = await result.arrayBuffer();
+            res.set('Content-Type', 'audio/wav'); // Use the correct MIME type for audio
+            res.send(Buffer.from(buffer));
+        }catch(error){
+            console.error("Audio generator error: ", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+    

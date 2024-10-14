@@ -18,7 +18,6 @@ function ImageGeneration() {
       const url = URL.createObjectURL(response.data);
       setImageUrl(url);
     } catch (error) {
-      console.error('Error fetching image:', error);
       toast.error(error.error);
     }finally{
         setLoading(false);
@@ -38,10 +37,11 @@ function ImageGeneration() {
   };
 
   return (
-    <div className=' flex flex-col mx-10 items-center mt-10'>
+    <div className=' flex flex-col mx-10 items-center mt-2'>
+      <h1 className=' text-center text-4xl my-10'>Image Generation</h1>
         <div className='flex space-x-2 items-center w-full'>
             <input type="text" placeholder="Type here" value={input} onChange={(e) => setInput(e.target.value)} className="input h-16 text-xl input-bordered w-full" />
-            <button title='generate image' onClick={fetchImage} className=' bg-blue-800 rounded-xl text-white p-4 '><GiRollingEnergy className='w-10 h-10'/></button>
+            <button disabled={loading} title='generate image' onClick={fetchImage} className='disabled:bg-gray-600 bg-blue-800 rounded-xl text-white p-4 '><GiRollingEnergy className='w-10 h-10'/></button>
             <button title='save image' onClick={saveImage} disabled={!imageUrl} className=' disabled:bg-gray-600 bg-blue-800 rounded-xl text-white p-4 '><BsSave className='w-10 h-10'/></button>
         </div>
       {loading && !imageUrl && <span className="mt-10 loading loading-dots loading-lg"></span>}

@@ -46,6 +46,7 @@ const TextGeneration = () => {
 
   return (
     <div className="  sm:mx-20 mx-2 o flex justify-center items-center flex-col my-2 sm:p-10">
+        <h1 className=' text-center text-4xl my-2'>Text Generation</h1>
         <div className=" h-[500px] overflow-auto my-10 border-4 border-slate-800 rounded-xl bg-gray-600 w-full  p-6">
             <div className="chat chat-start">
                 {generatedText && <div className="chat-bubble text-xl">{displayedText}</div>}
